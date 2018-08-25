@@ -1,3 +1,4 @@
+require 'byebug'
 class Array
 
 # My Flatten
@@ -69,31 +70,33 @@ end
 # a.my_join         # => "abcd"
 # a.my_join("$")    # => "a$b$c$d"
 
-def my_join(separator = "")
-  ret = ""
-  each_with_index do |el, i|
-    if i == count - 1
-      ret << el
-    else
-      ret << el + separator
+  def my_join(separator = "")
+    ret = ""
+    each_with_index do |el, i|
+      if i == count - 1
+        ret << el
+      else
+        ret << el + separator
+      end
     end
+    ret
   end
-  ret
-end
 
 
-def my_reverse
-  dup = self.dup
-  ret = []
-  until dup.empty?
-    ret << dup.pop
+  def my_reverse
+    dup = self.dup
+    ret = []
+    until dup.empty?
+      ret << dup.pop
+    end
+    ret
   end
-  ret
-end
 
-def rev_rec
-  return self if count == 1
-  self.drop(1).rev_rec + [self.first] 
+  def rev_rec
+    return self if count == 1
+    self.drop(1).rev_rec + [self.first]
+  end
+
 end
 
 # My Reverse
@@ -103,4 +106,76 @@ end
 #
 # [ "a", "b", "c" ].my_reverse   #=> ["c", "b", "a"]
 # [ 1 ].my_reverse               #=> [1]
+
+def factors(num)
+  ret = []
+  for i in (1..num)
+    ret << i if num % i == 0
+  end
+  ret
+end
+
+def primes(num)
+  ret = []
+  i = 2
+  until ret.count == num
+    ret << i if prime?(i)
+    i+=1
+  end
+  ret
+end
+
+def prime?(int)
+  for i in (2...int)
+    return false if int % i == 0
+  end
+  true
+end
+
+def bubble_sort!(array, &prc)
+  # debugger
+  prc ||= Proc.new {|el1, el2| el1 <=> el2}
+  sorted = false
+  until sorted
+    sorted = true
+    i = 0
+    while i < array.count - 1
+      if prc.call(array[i], array[i+1]) == 1
+        array[i], array[i+1] = array[i+1], array[i]
+        sorted = false
+      end
+      i+=1
+    end
+  end
+  array
+end
+
+def bubble_sort(array, &prc)
+  # prc ||= Proc.new {|el1, el2| el1 <=> el2}
+  a = array.dup
+  bubble_sort!(a, &prc)
+end
+
+def substrings(string)
+  ret = []
+  for i in (0..string.length)
+    k = 0
+    while i + k < string.length
+      ret << string[i..i+k]
+      k+=1
+    end
+  end
+  ret
+end
+
+def rec_subs(string)
+  return [string] if string.length == 1
+  ([string] + rec_subs(string[1..-1]) + rec_subs(string[0...-1])).uniq
+end
+
+
+
+def subwords(word, dictionary)
+  subs = substrings(word)
+  subs.select {|sub| dictionary.include?(sub)}.uniq
 end
