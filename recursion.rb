@@ -84,12 +84,20 @@ class Array
     subs.concat(subs.map {|el| el += take(1)})
   end
 
-  def permutations
-    return self if count == 1
-    mid = count/2
-    first = take(mid)
-    second = drop(mid)
-    [first.permutations, second.permutations]
+  def my_permutations
+    # byebug
+    return [self] if count <= 1
+    one = self.shift
+    perms = my_permutations
+    all_permutations = []
+    perms.each do |perm|
+      i = 0
+      while i <= perm.count
+        all_permutations << perm.take(i) + [one] + perm.drop(i)
+        i += 1
+      end
+    end
+    all_permutations
   end
 
 end
