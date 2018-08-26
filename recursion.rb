@@ -109,3 +109,14 @@ def fib_array(num)
   n_less = fib_array(num - 1)
   n_less << n_less[-1] + n_less[-2]
 end
+
+def make_change(target, coins = [25,10,5,1])
+  # byebug
+  change = []
+  return [] if coins.empty?
+  until target < coins[0]
+    target -= coins[0]
+    change << coins[0]
+  end
+  change + make_change(target, coins[1..-1])
+end
